@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Libreria</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icona.jpg">
-<meta name="theme-color" content="#f2ede4">
-</head>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icona.jpg">
+    <meta name="theme-color" content="#f2ede4">
     <style>
         :root {
             --primary: #ff85a1;
@@ -40,7 +39,6 @@
         }
         input:focus { border-color: var(--primary); }
         
-        /* Stile barra di ricerca */
         .search-bar { 
             background: white; border: 2px solid var(--primary); 
             margin-bottom: 20px; border-radius: 25px; padding-left: 20px;
@@ -74,10 +72,12 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer;
             position: relative;
         }
-        .book-card h3 { margin: 0; color: var(--primary); font-size: 1.1em; padding-right: 25px; }
+        .book-card h3 { margin: 0; color: var(--primary); font-size: 1.1em; padding-right: 65px; }
         .book-card p { margin: 5px 0 0 0; font-size: 0.9em; opacity: 0.8; }
 
-        .delete-x { position: absolute; top: 15px; right: 15px; color: #ff5252; font-weight: bold; font-size: 20px; cursor: pointer; }
+        .card-actions { position: absolute; top: 15px; right: 10px; display: flex; gap: 12px; }
+        .delete-x { color: #ff5252; font-weight: bold; font-size: 20px; cursor: pointer; }
+        .move-book { color: var(--primary); font-size: 20px; cursor: pointer; }
 
         .navbar { 
             position: fixed; bottom: 0; width: 100%; background: var(--white); 
@@ -94,9 +94,7 @@
 
     <div id="page-list" class="page active">
         <h1>Libreria Titti</h1>
-        
         <input type="text" id="search-input" class="search-bar" placeholder="🔍 Cerca titolo, autore o editore..." onkeyup="renderList()">
-        
         <button class="btn-main" onclick="openNewForm()">+ Aggiungi Libro Letto</button>
         <div id="books-container" style="margin-top: 20px;"></div>
     </div>
@@ -158,6 +156,7 @@
         let myWishes = JSON.parse(localStorage.getItem('titti_wishes')) || [];
         let tempSource = "";
         let tempRating = 0;
+        let wishIndexToRemove = null;
 
         function navigate(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -168,12 +167,13 @@
         }
 
         function openNewForm() {
+            wishIndexToRemove = null;
             document.getElementById('edit-index').value = "";
             document.getElementById('form-title').innerText = "Nuovo Libro Letto";
             document.getElementById('in-title').value = "";
             document.getElementById('in-author').value = "";
-            document.getElementById('in-notes').value = "";
             document.getElementById('in-publisher').value = "";
+            document.getElementById('in-notes').value = "";
             setSource("", null);
             setRating(0);
             navigate('page-form');
@@ -194,6 +194,7 @@
         function saveData() {
             const title = document.getElementById('in-title').value;
             if(!title) { alert("Mamma, metti il titolo!"); return; }
+            
             const book = { 
                 title, 
                 author: document.getElementById('in-author').value || "Ignoto", 
@@ -202,8 +203,19 @@
                 rating: tempRating, 
                 notes: document.getElementById('in-notes').value 
             };
+
             const index = document.getElementById('edit-index').value;
-            if(index === "") myBooks.push(book); else myBooks[index] = book;
+            if(index === "") {
+                myBooks.push(book);
+                if(wishIndexToRemove !== null) {
+                    myWishes.splice(wishIndexToRemove, 1);
+                    localStorage.setItem('titti_wishes', JSON.stringify(myWishes));
+                    wishIndexToRemove = null;
+                }
+            } else {
+                myBooks[index] = book;
+            }
+
             localStorage.setItem('titti_data', JSON.stringify(myBooks));
             navigate('page-list');
         }
@@ -223,7 +235,7 @@
                 container.innerHTML = "<p style='text-align:center; opacity:0.5'>Nessun libro trovato.</p>";
             }
 
-            filtered.forEach((b, i) => {
+            filtered.forEach((b) => {
                 const originalIndex = myBooks.indexOf(b);
                 const card = document.createElement('div');
                 card.className = 'book-card';
@@ -262,12 +274,11 @@
         function saveWish() {
             const title = document.getElementById('wish-title').value;
             if(!title) return;
-            const wish = {
+            myWishes.push({
                 title: title,
                 author: document.getElementById('wish-author').value || "Ignoto",
                 publisher: document.getElementById('wish-publisher').value || "Non specificato"
-            };
-            myWishes.push(wish);
+            });
             localStorage.setItem('titti_wishes', JSON.stringify(myWishes));
             document.getElementById('wish-title').value = "";
             document.getElementById('wish-author').value = "";
@@ -283,13 +294,31 @@
                 card.className = 'book-card';
                 card.style.borderLeftColor = "#ffca28";
                 card.innerHTML = `
-                    <span class="delete-x" onclick="deleteWish(${i})">✖</span>
+                    <div class="card-actions">
+                        <span class="move-book" onclick="startMoveToRead(${i})">📖</span>
+                        <span class="delete-x" onclick="deleteWish(${i})">✖</span>
+                    </div>
                     <h3>${w.title}</h3>
                     <p><strong>Autore:</strong> ${w.author}</p>
                     <p><strong>Editore:</strong> ${w.publisher}</p>
                 `;
                 container.appendChild(card);
             });
+        }
+
+        function startMoveToRead(i) {
+            event.stopPropagation();
+            const wish = myWishes[i];
+            wishIndexToRemove = i;
+            document.getElementById('edit-index').value = "";
+            document.getElementById('form-title').innerText = "Dal desiderio ai letti ✨";
+            document.getElementById('in-title').value = wish.title;
+            document.getElementById('in-author').value = wish.author;
+            document.getElementById('in-publisher').value = wish.publisher;
+            document.getElementById('in-notes').value = "";
+            setRating(0);
+            setSource("", null);
+            navigate('page-form');
         }
 
         function deleteWish(i) {
