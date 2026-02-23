@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Libreria Titti</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkxpYnJlcmlhIFRpdHRpIiwKICAic2hvcnRfbmFtZSI6ICJUaXR0aSIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmNWY3IiwKICAidGhlbWVfY29sb3IiOiAiI2ZmODVhMSIKfQ==">
     
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkxpYnJlcmlhIFRpdHRpIiwKICAic2hvcnRfbmFtZSI6ICJUaXR0aSIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmNWY3IiwKICAidGhlbWVfY29sb3IiOiAiI2ZmODVhMSIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBZ0FBQUFJQ0FZQUFBQUJmSzhPWUFBQUFEVmxXSFZ3Y0dSbSIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
-    
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIABAMAAAAG7R+pAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAA1BMVEX/hZHLM69bAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH6AMLEBEXS9fVpQAAADhJREFUeNrtwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADYBctmAAE97637AAAAAElFTkSuQmCC">
-
     <style>
         :root {
             --primary: #ff85a1;
@@ -24,57 +21,51 @@
             color: var(--text); 
             margin: 0; 
             padding-bottom: 80px;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .page { display: none; padding: 20px; max-width: 500px; margin: auto; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        h1 { text-align: center; color: var(--primary); font-size: 2.2em; margin-bottom: 20px; }
+        h1 { text-align: center; color: var(--primary); font-size: 2.2em; margin-bottom: 10px; }
         h2 { color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-top: 0; }
-
-        /* Barra di ricerca */
-        .search-bar { 
-            width: 100%; padding: 12px 20px; border: 2px solid var(--primary); 
-            border-radius: 25px; box-sizing: border-box; font-size: 16px;
-            margin-bottom: 20px; outline: none; background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
 
         label { font-weight: bold; display: block; margin-top: 15px; color: var(--primary); }
         input, textarea { 
             width: 100%; padding: 12px; border: 2px solid var(--secondary); 
             border-radius: 12px; box-sizing: border-box; font-size: 16px; margin-top: 5px;
-            outline: none; background: white;
+            outline: none;
         }
         input:focus { border-color: var(--primary); }
-        textarea { height: 100px; resize: none; }
+        
+        /* Stile barra di ricerca */
+        .search-bar { 
+            background: white; border: 2px solid var(--primary); 
+            margin-bottom: 20px; border-radius: 25px; padding-left: 20px;
+        }
 
-        /* Griglia provenienza */
+        textarea { height: 100px; resize: none; word-wrap: break-word; white-space: pre-wrap; }
+
         .source-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .btn-source { 
             padding: 12px; border: 2px solid var(--primary); border-radius: 12px; 
-            background: var(--white); cursor: pointer; text-align: center; font-weight: bold; font-size: 14px;
+            background: var(--white); cursor: pointer; text-align: center; font-weight: bold;
         }
         .btn-source.selected { background: var(--primary); color: white; }
 
-        /* Stelle */
-        .stars { font-size: 40px; text-align: center; margin: 10px 0; cursor: pointer; }
-        .stars span { color: #ddd; }
+        .stars { font-size: 40px; text-align: center; margin: 10px 0; cursor: pointer; width: 100%; }
+        .stars span { display: inline-block; color: #ddd; transition: color 0.2s; }
         .stars span.active { color: #ffca28; }
 
-        /* Bottoni */
         .btn-main { 
             background: var(--primary); color: white; border: none; padding: 16px; 
             width: 100%; border-radius: 50px; font-size: 18px; font-weight: bold; 
             cursor: pointer; margin-top: 15px; box-shadow: 0 4px 10px rgba(255,133,161,0.2);
         }
         .btn-secondary { background: #bbb; }
-        .btn-delete { background: #ff5252; margin-top: 10px; }
-        .btn-edit { background: #4caf50; margin-top: 10px; }
+        .btn-delete { background: #ff5252; }
+        .btn-edit { background: #4caf50; }
 
-        /* Card Libro */
         .book-card { 
             background: var(--white); padding: 15px; margin-bottom: 15px; 
             border-radius: 15px; border-left: 6px solid var(--primary);
@@ -83,37 +74,38 @@
         }
         .book-card h3 { margin: 0; color: var(--primary); font-size: 1.1em; padding-right: 25px; }
         .book-card p { margin: 5px 0 0 0; font-size: 0.9em; opacity: 0.8; }
-        
-        .delete-x { position: absolute; top: 15px; right: 15px; color: #ff5252; font-weight: bold; font-size: 18px; }
 
-        /* Navbar */
+        .delete-x { position: absolute; top: 15px; right: 15px; color: #ff5252; font-weight: bold; font-size: 20px; cursor: pointer; }
+
         .navbar { 
-            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white); 
+            position: fixed; bottom: 0; width: 100%; background: var(--white); 
             display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
         .nav-btn { background: none; border: none; color: #aaa; font-weight: bold; cursor: pointer; font-size: 14px; }
         .nav-btn.active { color: var(--primary); }
 
-        .note-box { background: var(--secondary); padding: 15px; border-radius: 12px; font-style: italic; margin-top: 10px; word-wrap: break-word; }
+        .note-display { background: var(--secondary); padding: 15px; border-radius: 12px; font-style: italic; margin-top: 10px; word-wrap: break-word; }
     </style>
 </head>
 <body>
 
     <div id="page-list" class="page active">
         <h1>Libreria Titti</h1>
+        
         <input type="text" id="search-input" class="search-bar" placeholder="🔍 Cerca titolo, autore o editore..." onkeyup="renderList()">
-        <button class="btn-main" onclick="openForm()">+ Aggiungi Libro Letto</button>
+        
+        <button class="btn-main" onclick="openNewForm()">+ Aggiungi Libro Letto</button>
         <div id="books-container" style="margin-top: 20px;"></div>
     </div>
 
     <div id="page-form" class="page">
-        <h2 id="form-title">Nuovo Libro</h2>
-        <label>Titolo</label><input type="text" id="in-title">
-        <label>Autore</label><input type="text" id="in-author">
-        <label>Editore</label><input type="text" id="in-publisher">
+        <h2 id="form-title">Nuovo Libro Letto</h2>
+        <label>Titolo</label><input type="text" id="in-title" placeholder="Es: Il barone rampante">
+        <label>Autore</label><input type="text" id="in-author" placeholder="Es: Italo Calvino">
+        <label>Editore</label><input type="text" id="in-publisher" placeholder="Es: Mondadori">
         
-        <label>Provenienza</label>
+        <label>Dove l'hai preso?</label>
         <div class="source-grid">
             <div class="btn-source" onclick="setSource('Comprato', this)">Comprato</div>
             <div class="btn-source" onclick="setSource('Biblioteca', this)">Biblioteca</div>
@@ -126,28 +118,30 @@
             <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
         </div>
         
-        <label>Note / Recensione</label><textarea id="in-notes"></textarea>
+        <label>Note / Recensione</label><textarea id="in-notes" placeholder="Cosa ne pensi?"></textarea>
         
         <input type="hidden" id="edit-index">
-        <button class="btn-main" onclick="saveData()">Salva Libro</button>
+        <button class="btn-main" onclick="saveData()">Salva nella Libreria</button>
         <button class="btn-main btn-secondary" onclick="navigate('page-list')">Annulla</button>
     </div>
 
     <div id="page-detail" class="page">
         <h2>Scheda Libro</h2>
         <div id="detail-box" style="background: white; padding: 20px; border-radius: 20px;"></div>
-        <button id="edit-btn" class="btn-main btn-edit">Modifica</button>
-        <button id="delete-btn" class="btn-main btn-delete">Elimina</button>
+        <div style="display: flex; gap: 10px;">
+            <button id="edit-btn" class="btn-main btn-edit">Modifica</button>
+            <button id="delete-btn" class="btn-main btn-delete">Elimina</button>
+        </div>
         <button class="btn-main btn-secondary" onclick="navigate('page-list')">Torna Indietro</button>
     </div>
 
     <div id="page-wish" class="page">
         <h1>Desideri ✨</h1>
-        <div style="background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <label>Titolo</label><input type="text" id="wish-title">
-            <label>Autore</label><input type="text" id="wish-author">
-            <label>Editore</label><input type="text" id="wish-publisher">
-            <button class="btn-main" onclick="saveWish()">Aggiungi ai Desideri</button>
+        <div style="background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <label>Titolo</label><input type="text" id="wish-title" placeholder="Titolo del libro">
+            <label>Autore</label><input type="text" id="wish-author" placeholder="Autore">
+            <label>Editore</label><input type="text" id="wish-publisher" placeholder="Editore">
+            <button class="btn-main" onclick="saveWish()">Aggiungi Desiderio</button>
         </div>
         <div id="wish-container" style="margin-top: 20px;"></div>
     </div>
@@ -171,13 +165,13 @@
             if(pageId === 'page-wish') { document.getElementById('nav-wish').classList.add('active'); renderWishes(); }
         }
 
-        function openForm() {
+        function openNewForm() {
             document.getElementById('edit-index').value = "";
             document.getElementById('form-title').innerText = "Nuovo Libro Letto";
             document.getElementById('in-title').value = "";
             document.getElementById('in-author').value = "";
-            document.getElementById('in-publisher').value = "";
             document.getElementById('in-notes').value = "";
+            document.getElementById('in-publisher').value = "";
             setSource("", null);
             setRating(0);
             navigate('page-form');
@@ -197,8 +191,7 @@
 
         function saveData() {
             const title = document.getElementById('in-title').value;
-            if(!title) { alert("Inserisci almeno il titolo!"); return; }
-            
+            if(!title) { alert("Mamma, metti il titolo!"); return; }
             const book = { 
                 title, 
                 author: document.getElementById('in-author').value || "Ignoto", 
@@ -207,10 +200,8 @@
                 rating: tempRating, 
                 notes: document.getElementById('in-notes').value 
             };
-
             const index = document.getElementById('edit-index').value;
             if(index === "") myBooks.push(book); else myBooks[index] = book;
-            
             localStorage.setItem('titti_data', JSON.stringify(myBooks));
             navigate('page-list');
         }
@@ -230,16 +221,12 @@
                 container.innerHTML = "<p style='text-align:center; opacity:0.5'>Nessun libro trovato.</p>";
             }
 
-            filtered.forEach((b) => {
+            filtered.forEach((b, i) => {
                 const originalIndex = myBooks.indexOf(b);
                 const card = document.createElement('div');
                 card.className = 'book-card';
                 card.onclick = () => showDetail(originalIndex);
-                card.innerHTML = `
-                    <h3>${b.title}</h3>
-                    <p>${b.author} • <i>${b.publisher}</i></p>
-                    <p style="color:#ffca28">${"★".repeat(b.rating)}${"☆".repeat(5-b.rating)}</p>
-                `;
+                card.innerHTML = `<h3>${b.title}</h3><p>${b.author} • <i>${b.publisher}</i></p><p style="color:#ffca28">${"★".repeat(b.rating)}${"☆".repeat(5-b.rating)}</p>`;
                 container.appendChild(card);
             });
         }
@@ -253,7 +240,7 @@
                 <p><strong>Provenienza:</strong> ${b.source || '-'}</p>
                 <p><strong>Voto:</strong> ${"★".repeat(b.rating)}</p>
                 <p><strong>Note:</strong></p>
-                <div class="note-box">${b.notes || 'Nessuna nota.'}</div>
+                <div class="note-display">${b.notes || 'Nessuna nota.'}</div>
             `;
             document.getElementById('delete-btn').onclick = () => { if(confirm("Eliminare definitivamente?")) { myBooks.splice(i, 1); localStorage.setItem('titti_data', JSON.stringify(myBooks)); navigate('page-list'); } };
             document.getElementById('edit-btn').onclick = () => {
@@ -273,11 +260,12 @@
         function saveWish() {
             const title = document.getElementById('wish-title').value;
             if(!title) return;
-            myWishes.push({
+            const wish = {
                 title: title,
                 author: document.getElementById('wish-author').value || "Ignoto",
                 publisher: document.getElementById('wish-publisher').value || "Non specificato"
-            });
+            };
+            myWishes.push(wish);
             localStorage.setItem('titti_wishes', JSON.stringify(myWishes));
             document.getElementById('wish-title').value = "";
             document.getElementById('wish-author').value = "";
@@ -295,7 +283,8 @@
                 card.innerHTML = `
                     <span class="delete-x" onclick="deleteWish(${i})">✖</span>
                     <h3>${w.title}</h3>
-                    <p>${w.author} • <i>${w.publisher}</i></p>
+                    <p><strong>Autore:</strong> ${w.author}</p>
+                    <p><strong>Editore:</strong> ${w.publisher}</p>
                 `;
                 container.appendChild(card);
             });
