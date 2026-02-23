@@ -7,7 +7,7 @@
   "theme_color": "#f2ede4",
   "icons": [
     {
-      "src": "libreria.jpg.jpeg",
+      "src": "icona.jpg",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
